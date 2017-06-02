@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title></title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+			list-style-type: none;
+		}
+		#box{
+			width:200px;
+			height:200px;
+			margin:100px auto;
+			background:red;
+		}
+	</style>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded',function(){
+			var oDiv=document.getElementById('box');
+			var s=1;
+			//计算两点直径
+			function getS(ev){
+				var x1=ev.targetTouches[0].pageX;
+				var y1=ev.targetTouches[0].pageY;
+				var x2=ev.targetTouches[0].pageX;
+				var y2=ev.targetTouches[0].pageY;
+				var a=x1-x2;
+				var b=y1-y2;
+				return Math.sqrt(a*a+b*b);
+			}
+			document.addEventListener('touchstart',function(ev){
+				var oldS=s;
+				if(ev.targetTouches.length==2){ //如果是两个手指的时候
+					var downS=getS(ev)
+				}
+				function move(ev){
+					if(ev.targetTouches.length==2){ //如果是两个手指的时候
+						var s=oldS+getS(ev)/downS
+						oDiv.style.WebkitTransform='scale('+s+')';
+					}
+				}
+			
+				function end(){
+					document.removeEventListener('touchmove',move,false);
+					document.removeEventListener('touchend',end,false);
+				}
+				document.addEventListener('touchmove',move,false);
+				document.addEventListener('touchend',end,false);
+				ev.preventDefault();
+				},false);
+			},false);
+
+	</script>
+</head>
+<body>
+	<div id="box"></div>
+</body>
+</html>
